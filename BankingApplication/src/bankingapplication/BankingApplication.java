@@ -101,9 +101,9 @@ public class BankingApplication {
                             if ("1".equals(debitResponse)) {
                                 DebitCard.createDebitCard(connection, userAccount);
                             } else if ("2".equals(debitResponse)) {
-                                 DebitCard.checkCards(connection, userAccount);
+                                 DebitCard.checkCard(connection, userAccount);
                             } else if ("3".equals(debitResponse)) {
-                                Checking.checkBalance(connection, userAccount);
+                                DebitCard.checkBalance(connection, userAccount);
                             }else {
                                 response = "x";
                                 response2 = "x";

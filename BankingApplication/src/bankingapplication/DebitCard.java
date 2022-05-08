@@ -17,44 +17,48 @@ public class DebitCard {
     
     static void createDebitCard(Connection c, Account account) throws SQLException {
         Scanner scan = new Scanner(System.in);
-        String insert = "INSERT INTO debitcard(balance, debitcardnumber, cvv, expiration, dailylimit, checkingid) " + "VALUES(?, ?, ?, ?, ?, ?)";
+        String insert = "INSERT INTO debitcard(debitcardnumber, cvv, expiration, dailylimit, checkingid) " + "VALUES(?, ?, ?, ?, ?)";
         PreparedStatement pstmt = c.prepareStatement(insert);
-        pstmt.setDouble(1, 0.00);
-        pstmt.setLong(2, (long)(Math.random() * (1000000000)));
-        pstmt.setInt(3, (int)((Math.random() * (999 - 100) + 100 )));
-        pstmt.setDate(4, new java.sql.Date(new java.util.Date().getTime() + (999999999 * 26)));
+        pstmt.setLong(1, (long)(Math.random() * (1000000000)));
+        pstmt.setInt(2, (int)((Math.random() * (999 - 100) + 100 )));
+        pstmt.setDate(3, new java.sql.Date(new java.util.Date().getTime() + (999999999 * 26)));
         Checking.checkCards(c, account);
         System.out.println("enter the checkingAccountID: ");
         String checkingid = scan.nextLine();
-        pstmt.setDouble(Math.random());
-        pstmt.setInt(6, Integer.parseInt(checkingid));
+        pstmt.setDouble(4, 500.00);
+        pstmt.setInt(5, Integer.parseInt(checkingid));
         pstmt.executeUpdate();
     }
     
-    static void checkCards(Connection c, Account account) throws SQLException {
+    static void checkCard(Connection c, Account account) throws SQLException {
         Scanner scan = new Scanner(System.in);
-        String select = "SELECT * FROM debitcard WHERE accountid = ?";
+        String select = "SELECT * FROM debitcard WHERE checkingid = ?";
         PreparedStatement pstmt = c.prepareStatement(select);
-        pstmt.setInt(1, account.getAccountID());
+        Checking.checkCards(c, account);
+        System.out.println("enter checkingID that you wish to check");
+        int userSelect = scan.nextInt();
+        pstmt.setInt(1, userSelect);
         ResultSet rs = pstmt.executeQuery();
         while (rs.next()) {
-            System.out.println(DebitCard.toString(rs.getInt(1), rs.getDouble(2), rs.getLong(3), rs.getInt(4), String.valueOf(rs.getDate(5)), rs.getInt(6)));
+            System.out.println(DebitCard.toString(rs.getInt(1), rs.getLong(2), rs.getInt(3), String.valueOf(rs.getDate(4)), rs.getDouble(5), rs.getInt(6)));
         }
     }
     
-    static String toString(int cardid, double balance, long debitcardnumber, int cvv, String expiration, int accountid) {
-        return ("cardID: " + cardid + "\nBalance: " + balance +  "\nDebit Card Number: " + debitcardnumber + "\nCVV: " + cvv + "\nExpiration: " + expiration + "\nAccountID: " + accountid + "\n");
+    static String toString(int cardid, long debitcardnumber, int cvv, String expiration, double dailyLimit, int checkingID) {
+        return ("cardID: " + cardid + "\nDebit Card Number: " + debitcardnumber + "\nCVV: " + cvv + "\nExpiration: " + expiration + 
+                "\nDaily Limit" + dailyLimit + "\nCheckingID: " + checkingID + "\n");
     }
     
-    static void checkBalance(Connection c, Account account) throws SQLException {
-         Scanner scan = new Scanner(System.in);
-         String select = "SELECT balance FROM accountid WHERE accountid = ?";
-         PreparedStatement pstmt = c.prepareStatement(select);
-        System.out.println("Enter accountID that you wish to check");
-         String accountid = scan.nextLine();
-        pstmt.setInt(1, account.getAccountID());
-         ResultSet rs = pstmt.executeQuery();
-        while (rs.next()) {
+    static void checkBalance(Connection c, Account account)throws SQLException{
+        Scanner scan = new Scanner(System.in);
+        String select = "SELECT balance FROM checking WHERE checkingid = ?";
+        PreparedStatement pstmt = c.prepareStatement(select);
+        Checking.checkCards(c, account);
+        System.out.println("Enter checkingID that you wish to check");
+        String debitcardid = scan.nextLine();
+        pstmt.setInt(1, Integer.parseInt(debitcardid));
+        ResultSet rs = pstmt.executeQuery();
+        while(rs.next()){
             System.out.println("Your balance on this account is: " + rs.getDouble(1));
         }
     }
