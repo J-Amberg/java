@@ -32,6 +32,19 @@ public class CreditCard {
         pstmt.setInt(7, account.getAccountID());
         pstmt.executeUpdate();
     }
+    
+    static void deleteCard(Connection c, Account account) throws SQLException{
+        Scanner scan = new Scanner(System.in);
+        String delete = "DELETE FROM creditcard WHERE creditcardid = ? AND accountid = ?";
+        PreparedStatement pstmt = c.prepareStatement(delete);
+        System.out.println("Please enter the card id for the card you'd like to delete:");
+        String cardid = scan.nextLine();
+        pstmt.setInt(1, Integer.parseInt(cardid));
+        pstmt.setInt(2, account.getAccountID());
+        pstmt.executeUpdate();
+        System.out.println("Deleted card: " + cardid);
+    }
+    
     static void checkCards(Connection c, Account account) throws SQLException{
         Scanner scan = new Scanner(System.in);
         String select = "SELECT * FROM creditcard WHERE accountid = ?";

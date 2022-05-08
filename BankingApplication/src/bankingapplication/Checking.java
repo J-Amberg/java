@@ -28,6 +28,18 @@ public class Checking {
         System.out.println("Checking created");
     }
     
+    static void deleteChecking(Connection c, Account account) throws SQLException{
+        Scanner scan = new Scanner(System.in);
+        String delete = "DELETE FROM checking WHERE checkingid = ? AND accountid = ?";
+        PreparedStatement pstmt = c.prepareStatement(delete);
+        System.out.println("Please enter the card id for the checking you'd like to delete:");
+        String cardid = scan.nextLine();
+        pstmt.setInt(1, Integer.parseInt(cardid));
+        pstmt.setInt(2, account.getAccountID());
+        pstmt.executeUpdate();
+        System.out.println("Checking ID: " + cardid);
+    }
+    
     static void withdraw(Connection c, Account account)throws SQLException{
         Scanner scan = new Scanner(System.in);
         String update = "UPDATE checking SET balance = ? WHERE accountid = ? AND checkingid = ?";

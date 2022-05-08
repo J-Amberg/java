@@ -47,9 +47,9 @@ public class BankingApplication {
                 response = scan.nextLine();
             }
             while ("1".equals(response) || "2".equals(response) || "3".equals(response) || "x".equals(response)) {
-                
+
                 if ("1".equals(response)) {
-                    //savings interaction here
+                    System.out.println("'1' Create a Savings\n'2' View Savings\n'3'Delete Savings");
                 } else if ("2".equals(response)) {
                     while ("2".equals(response)) {
 
@@ -72,21 +72,42 @@ public class BankingApplication {
                 } else if ("3".equals(response)) {
 
                     while ("3".equals(response)) {
-                        System.out.println("'1' for create a checking account\n'2' to see your checking accounts\n'3' to withdraw \n"
-                                + "'4' to deposit\n'5' to check balance\nanything else when done");
-                        String checkingResponse = scan.nextLine();
-                        if ("1".equals(checkingResponse)) {
-                            Checking.openCheckingAccount(connection, userAccount);
-                        } else if ("2".equals(checkingResponse)) {
-                            Checking.checkCards(connection, userAccount);
-                        } else if ("3".equals(checkingResponse)) {
-                            Checking.withdraw(connection, userAccount);
-                        } else if ("4".equals(checkingResponse)) {
-                            Checking.deposit(connection, userAccount);
-                        } else if ("5".equals(checkingResponse)) {
-                            Checking.checkBalance(connection, userAccount);
-                        } else {
-                            response = "x";
+                        System.out.println("'1' for Checking\n'2' for Debit");
+                        String response2 = scan.nextLine();
+                        while ("1".equals(response2)) {
+                            System.out.println("'1' for create a checking account\n'2' to see your checking accounts\n'3' to withdraw \n"
+                                    + "'4' to deposit\n'5' to check balance\n'6' to delete a checking\nanything else when done");
+                            String checkingResponse = scan.nextLine();
+                            if ("1".equals(checkingResponse)) {
+                                Checking.openCheckingAccount(connection, userAccount);
+                            } else if ("2".equals(checkingResponse)) {
+                                Checking.checkCards(connection, userAccount);
+                            } else if ("3".equals(checkingResponse)) {
+                                Checking.withdraw(connection, userAccount);
+                            } else if ("4".equals(checkingResponse)) {
+                                Checking.deposit(connection, userAccount);
+                            } else if ("5".equals(checkingResponse)) {
+                                Checking.checkBalance(connection, userAccount);
+                            } else if ("6".equals(checkingResponse)) {
+                                Checking.deleteChecking(connection, userAccount);
+                            } else {
+                                response = "x";
+                                response2 = "x";
+                            }
+                        }
+                        while("2".equals(response2)){
+                            System.out.println("'1' to create a debit card\n'2' to check cards\n'3' to check balance of a card");
+                            String debitResponse = scan.nextLine();
+                            if ("1".equals(debitResponse)) {
+                                DebitCard.createDebitCard(connection, userAccount);
+                            } else if ("2".equals(debitResponse)) {
+                                 DebitCard.checkCards(connection, userAccount);
+                            } else if ("3".equals(debitResponse)) {
+                                Checking.checkBalance(connection, userAccount);
+                            }else {
+                                response = "x";
+                                response2 = "x";
+                            }
                         }
                     }
                 } else {
